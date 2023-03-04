@@ -16,6 +16,14 @@ class Photos with ChangeNotifier {
     return _photos.firstWhere((photo) => photo.id == id);
   }
 
+  Future<void> fetchOnePhoto(int id) async {
+    final response = await http.get(Uri.parse('$apiBase/$id'));
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    final photo = Photo.fromJson(extractedData);
+    _photos.add(photo);
+    notifyListeners();
+  }
+
   Future<void> fetchPhotos() async {
     final response = await http.get(Uri.parse(apiBase));
     final List<Photo> loadedPhotos = [];

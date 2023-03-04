@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pics/providers/photos.dart';
+import 'package:pics/widgets/image_list.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,15 +23,19 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: fetchImage,
         child: const Icon(Icons.add),
       ),
-      body: Center(
-        child: Text('$counter no images found!'),
-      ),
+      body: counter == 0
+          ? const Center(
+              child: Text('Press the button to see some images!'),
+            )
+          : const ImageList(),
     );
   }
 
-  void fetchImage() {
+  void fetchImage() async {
+    counter += 1;
+    await Provider.of<Photos>(context, listen: false).fetchOnePhoto(counter);
     setState(() {
-      counter++;
+      counter = counter;
     });
   }
 }
